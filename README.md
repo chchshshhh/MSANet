@@ -27,6 +27,12 @@ Not included:
 - Model weights and checkpoints (`*.pth`, `*.pt`, `*.ckpt`, `*.pth.tar`, `checkpoint*`)
 - Runtime cache files and generated Python bytecode
 
+## Pretrained Weights
+
+Final TCSVT/MSANet weights are available on [Google Drive](https://drive.google.com/drive/folders/10q_GoF1yPN4DBhQDmdQ_jZmfPz7vvyfJ?usp=sharing).
+
+Download the checkpoint locally and pass it to the testing script with `--resume`.
+
 ## Usage
 
 Install the required Python packages in an environment with PyTorch and CUDA support. The scripts use packages such as `torch`, `torchvision`, `numpy`, `Pillow`, `opencv-python`, and `albumentations`.
