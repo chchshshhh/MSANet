@@ -1,6 +1,4 @@
-import os
-
-os.environ['CUDA_VISIBLE_DEVICES'] = '3'
+﻿import os
 import time
 import datetime
 import numpy as np
@@ -15,16 +13,16 @@ def setup_seed(seed):
     torch.backends.cudnn.deterministic = True
 
 setup_seed(666)
-
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 # from src.fcnconvnext import FcnNet
-# from src.model.uniformeredgez3dMTduo import FcnNet
-from src.model.xin.uniformeredgez3dMTduo23gaiviewearly import FcnNet
+from src.model.xin.MSANet import FcnNet
 import numpy as np
+import warnings
+warnings.filterwarnings('ignore')
 # from src.swintransformer_model import fcn_transformer
-from train_utils.train_and_eval_dc22cledge33333 import train_one_epoch, evaluate, create_lr_scheduler
-from dataset.my_dataset_irl384gaiedge import CasiaSegmentation,CasiaSegmentation2,CasiaSegmentation3,CasiaSegmentation4
+from train_utils.train_and_eval_dc22cledgeiou import train_one_epoch, evaluate, create_lr_scheduler
+from dataset.my_dataset_irl384gaiedge import CasiaSegmentation,CasiaSegmentation2,CasiaSegmentation3,CasiaSegmentation4,CasiaSegmentation5,CasiaSegmentation6,CasiaSegmentation7
 
 
 
@@ -243,7 +241,9 @@ def main(args):
     val_dataset1 = CasiaSegmentation2(transforms=get_transform(train=False))
     val_dataset2 = CasiaSegmentation3(transforms=get_transform(train=False))
     val_dataset3 = CasiaSegmentation4(transforms=get_transform(train=False))
-
+    val_dataset4 = CasiaSegmentation5(transforms=get_transform(train=False))
+    val_dataset5 = CasiaSegmentation6(transforms=get_transform(train=False))
+    val_dataset6 = CasiaSegmentation7(transforms=get_transform(train=False))
     # num_workers = min([os.cpu_count(), batch_size if batch_size > 1 else 0, 8])
     num_workers = 16
 
@@ -280,6 +280,24 @@ def main(args):
                                               pin_memory=True,
                                               worker_init_fn=seed_worker,
                                               collate_fn=val_dataset3.collate_fn)
+    val_loader4 = torch.utils.data.DataLoader(val_dataset4,
+                                              batch_size=1,
+                                              num_workers=num_workers,
+                                              pin_memory=True,
+                                              worker_init_fn=seed_worker,
+                                              collate_fn=val_dataset4.collate_fn)
+    val_loader5 = torch.utils.data.DataLoader(val_dataset5,
+                                              batch_size=1,
+                                              num_workers=num_workers,
+                                              pin_memory=True,
+                                              worker_init_fn=seed_worker,
+                                              collate_fn=val_dataset5.collate_fn)
+    val_loader6 = torch.utils.data.DataLoader(val_dataset6,
+                                              batch_size=1,
+                                              num_workers=num_workers,
+                                              pin_memory=True,
+                                              worker_init_fn=seed_worker,
+                                              collate_fn=val_dataset6.collate_fn)
 
     model = create_model(num_classes=num_classes,aux=args.aux)
     model.to(device)
@@ -312,8 +330,8 @@ def main(args):
         # optimizer.load_state_dict(checkpoint['optimizer'])
         # lr_scheduler.load_state_dict(checkpoint['lr_scheduler'])
         # args.start_epoch = checkpoint['epoch'] + 1
-        if args.amp:
-            scaler.load_state_dict(checkpoint["scaler"])
+        # if args.amp:
+        #     scaler.load_state_dict(checkpoint["scaler"])
 
     best_dice = 0.
     best_dice2 = 0.
@@ -329,16 +347,35 @@ def main(args):
         # mean_loss, lr,meanf1 = train_one_epoch(model, optimizer, train_loader, device, epoch, num_classes,
         #                                 lr_scheduler=lr_scheduler, print_freq=args.print_freq, scaler=scaler)
         # print(meanf1)
-
         # f1 = evaluate(model, val_loader2, device=device, num_classes=num_classes)
         # print(f"f1: {f1:.5f}")
-        # if epoch == 0:
-        #     f2 = evaluate(model, val_loader2, device=device, num_classes=num_classes)
-        #     print(f"f1: {f2:.5f}")
 
-        if epoch >= 29:
-            f2 = evaluate(model, val_loader2, device=device, num_classes=num_classes)
-            print(f"f1: {f2:.5f}")
+        # if epoch >= 29:
+        f1,ap,iou = evaluate(model, val_loader2, device=device, num_classes=num_classes)
+        print('test')
+        print(f"f1: {f1:.5f}")
+        print(f"ap: {ap:.5f}")
+        print(f"iou: {iou:.5f}")
+        f1, ap, iou = evaluate(model, val_loader3, device=device, num_classes=num_classes)
+        print('hadobe5k')
+        print(f"f1: {f1:.5f}")
+        print(f"ap: {ap:.5f}")
+        print(f"iou: {iou:.5f}")
+        f1, ap, iou = evaluate(model, val_loader4, device=device, num_classes=num_classes)
+        print('HCOCO')
+        print(f"f1: {f1:.5f}")
+        print(f"ap: {ap:.5f}")
+        print(f"iou: {iou:.5f}")
+        f1, ap, iou = evaluate(model, val_loader5, device=device, num_classes=num_classes)
+        print('hday2night')
+        print(f"f1: {f1:.5f}")
+        print(f"ap: {ap:.5f}")
+        print(f"iou: {iou:.5f}")
+        f1, ap, iou = evaluate(model, val_loader6, device=device, num_classes=num_classes)
+        print('HFlickr')
+        print(f"f1: {f1:.5f}")
+        print(f"ap: {ap:.5f}")
+        print(f"iou: {iou:.5f}")
         # # f2 = evaluate(model, val_loader2, device=device, num_classes=num_classes)
         # # print(f"f1: {f2:.3f}")
         # # # print(f'auc: {auc:.3f}')
@@ -390,14 +427,14 @@ def main(args):
         #     torch.save(save_file, "save_weights_convext_du3/best_model.pth")
         # else:
         #     torch.save(save_file, "save_weights/model_{}.pth".format(epoch))
-        # torch.save(save_file, "duo23early/model-{}.pth".format(epoch))
+        # torch.save(save_file, "dd/model-{}.pth".format(epoch))
     total_time = time.time() - start_time
     total_time_str = str(datetime.timedelta(seconds=int(total_time)))
     print("training time {}".format(total_time_str))
 
 
 def parse_args():
-
+    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
     import argparse
 
     parser = argparse.ArgumentParser(description="pytorch u-net training")
@@ -421,7 +458,7 @@ def parse_args():
                         metavar='W', help='weight decay (default: 1e-4)',
                         dest='weight_decay')
     parser.add_argument('--print-freq', default=100, type=int, help='print frequency')
-    parser.add_argument('--resume', default='/raid/csh/peng555/duo23early/model-34.pth', help='resume from checkpoint')
+    parser.add_argument('--resume', default='/raid/csh/peng555/duo23edgezc/model-34.pth', help='resume from checkpoint')
     parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                         help='start epoch')
     parser.add_argument('--save-best', default=True, type=bool, help='only save best dice weights')
@@ -447,12 +484,8 @@ if __name__ == '__main__':
     # 设置随机数种子
     setup_seed(666)
     args = parse_args()
-    #
-    # if not os.path.exists("./dd2222"):
-    #     os.mkdir("./dd2222")
 
-    if not os.path.exists("./duo23early"):
-        os.mkdir("./duo23early")
-    # if not os.path.exists("./duo23region"):
-    #     os.mkdir("./duo23region")
+    if not os.path.exists("./dd"):
+        os.mkdir("./dd")
+
     main(args)

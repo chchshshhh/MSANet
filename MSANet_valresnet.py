@@ -1,4 +1,4 @@
-import os
+﻿import os
 import time
 import datetime
 import numpy as np
@@ -16,13 +16,13 @@ setup_seed(666)
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 # from src.fcnconvnext import FcnNet
-from src.model.xin.uniformeredgez3dMTduo23gai import FcnNet
+from src.model.xin.MSANet_resnet import FcnNet
 import numpy as np
 import warnings
 warnings.filterwarnings('ignore')
 # from src.swintransformer_model import fcn_transformer
 from train_utils.train_and_eval_dc22cledgeiou import train_one_epoch, evaluate, create_lr_scheduler
-from dataset.my_dataset_irl384gaiedge import CasiaSegmentation,CasiaSegmentation2,CasiaSegmentation3,CasiaSegmentation4,CasiaSegmentation5,CasiaSegmentation6,CasiaSegmentation7,CasiaSegmentation8
+from dataset.my_dataset_irl384gaiedge import CasiaSegmentation,CasiaSegmentation2,CasiaSegmentation3,CasiaSegmentation4,CasiaSegmentation5,CasiaSegmentation6,CasiaSegmentation7
 
 
 
@@ -244,7 +244,6 @@ def main(args):
     val_dataset4 = CasiaSegmentation5(transforms=get_transform(train=False))
     val_dataset5 = CasiaSegmentation6(transforms=get_transform(train=False))
     val_dataset6 = CasiaSegmentation7(transforms=get_transform(train=False))
-    val_dataset7 = CasiaSegmentation8(transforms=get_transform(train=False))
     # num_workers = min([os.cpu_count(), batch_size if batch_size > 1 else 0, 8])
     num_workers = 16
 
@@ -299,12 +298,6 @@ def main(args):
                                               pin_memory=True,
                                               worker_init_fn=seed_worker,
                                               collate_fn=val_dataset6.collate_fn)
-    val_loader7 = torch.utils.data.DataLoader(val_dataset7,
-                                              batch_size=1,
-                                              num_workers=num_workers,
-                                              pin_memory=True,
-                                              worker_init_fn=seed_worker,
-                                              collate_fn=val_dataset7.collate_fn)
 
     model = create_model(num_classes=num_classes,aux=args.aux)
     model.to(device)
@@ -358,34 +351,28 @@ def main(args):
         # print(f"f1: {f1:.5f}")
 
         # if epoch >= 29:
-        # f1,ap,iou = evaluate(model, val_loader2, device=device, num_classes=num_classes)
-        # print('test')
-        # print(f"f1: {f1:.5f}")
-        # print(f"ap: {ap:.5f}")
-        # print(f"iou: {iou:.5f}")
-        # f1, ap, iou = evaluate(model, val_loader3, device=device, num_classes=num_classes)
-        # print('hadobe5k')
-        # print(f"f1: {f1:.5f}")
-        # print(f"ap: {ap:.5f}")
-        # print(f"iou: {iou:.5f}")
-        # f1, ap, iou = evaluate(model, val_loader4, device=device, num_classes=num_classes)
-        # print('HCOCO')
-        # print(f"f1: {f1:.5f}")
-        # print(f"ap: {ap:.5f}")
-        # print(f"iou: {iou:.5f}")
-        # f1, ap, iou = evaluate(model, val_loader5, device=device, num_classes=num_classes)
-        # print('hday2night')
-        # print(f"f1: {f1:.5f}")
-        # print(f"ap: {ap:.5f}")
-        # print(f"iou: {iou:.5f}")
-        # f1, ap, iou = evaluate(model, val_loader6, device=device, num_classes=num_classes)
-        # print('HFlickr')
-        # print(f"f1: {f1:.5f}")
-        # print(f"ap: {ap:.5f}")
-        # print(f"iou: {iou:.5f}")
-
-        f1, ap, iou = evaluate(model, val_loader7, device=device, num_classes=num_classes)
-        print('mul')
+        f1,ap,iou = evaluate(model, val_loader2, device=device, num_classes=num_classes)
+        print('test')
+        print(f"f1: {f1:.5f}")
+        print(f"ap: {ap:.5f}")
+        print(f"iou: {iou:.5f}")
+        f1, ap, iou = evaluate(model, val_loader3, device=device, num_classes=num_classes)
+        print('hadobe5k')
+        print(f"f1: {f1:.5f}")
+        print(f"ap: {ap:.5f}")
+        print(f"iou: {iou:.5f}")
+        f1, ap, iou = evaluate(model, val_loader4, device=device, num_classes=num_classes)
+        print('HCOCO')
+        print(f"f1: {f1:.5f}")
+        print(f"ap: {ap:.5f}")
+        print(f"iou: {iou:.5f}")
+        f1, ap, iou = evaluate(model, val_loader5, device=device, num_classes=num_classes)
+        print('hday2night')
+        print(f"f1: {f1:.5f}")
+        print(f"ap: {ap:.5f}")
+        print(f"iou: {iou:.5f}")
+        f1, ap, iou = evaluate(model, val_loader6, device=device, num_classes=num_classes)
+        print('HFlickr')
         print(f"f1: {f1:.5f}")
         print(f"ap: {ap:.5f}")
         print(f"iou: {iou:.5f}")
@@ -471,7 +458,7 @@ def parse_args():
                         metavar='W', help='weight decay (default: 1e-4)',
                         dest='weight_decay')
     parser.add_argument('--print-freq', default=100, type=int, help='print frequency')
-    parser.add_argument('--resume', default='/raid/csh/peng555/duo23/model-34.pth', help='resume from checkpoint')
+    parser.add_argument('--resume', default='/raid/csh/peng555/duo23res/model-34.pth', help='resume from checkpoint')
     parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                         help='start epoch')
     parser.add_argument('--save-best', default=True, type=bool, help='only save best dice weights')

@@ -1,4 +1,4 @@
-import os
+﻿import os
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '2'
 import time
@@ -20,7 +20,7 @@ import albumentations as A
 from albumentations.pytorch import ToTensorV2
 # from src.fcnconvnext import FcnNet
 # from src.model.uniformeredgez3dMTduo import FcnNet
-from src.model.xin.uniformeredgez3dMTduo23gai import FcnNet
+from src.model.xin.MSANet import FcnNet
 import numpy as np
 # from src.swintransformer_model import fcn_transformer
 from train_utils.train_and_eval_dc22cledge33333 import train_one_epoch, evaluate, create_lr_scheduler

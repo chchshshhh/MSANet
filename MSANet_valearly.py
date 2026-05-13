@@ -1,4 +1,4 @@
-import os
+﻿import os
 import time
 import datetime
 import numpy as np
@@ -16,7 +16,7 @@ setup_seed(666)
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 # from src.fcnconvnext import FcnNet
-from src.model.xin.uniformeredgez3dMTduo23gaiviewlatest import FcnNet
+from src.model.xin.MSANet_early import FcnNet
 import numpy as np
 import warnings
 warnings.filterwarnings('ignore')
@@ -458,7 +458,7 @@ def parse_args():
                         metavar='W', help='weight decay (default: 1e-4)',
                         dest='weight_decay')
     parser.add_argument('--print-freq', default=100, type=int, help='print frequency')
-    parser.add_argument('--resume', default='/raid/csh/peng555/duo23latest/model-34.pth', help='resume from checkpoint')
+    parser.add_argument('--resume', default='/raid/csh/peng555/duo23early/model-34.pth', help='resume from checkpoint')
     parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
                         help='start epoch')
     parser.add_argument('--save-best', default=True, type=bool, help='only save best dice weights')

@@ -8,14 +8,14 @@ Code release for **A Novel Multi-view Perception and Shrinkage Aggregation Netwo
 
 ## Release scope
 
-This repository is organized around the `duo23` experiments used for MSANet. It includes the training and testing scripts, model definitions, dataset loaders, losses, and utility code required by the `duo23` family.
+This repository is organized around the MSANet training and testing code. It includes the experiment scripts, model definitions, dataset loaders, losses, and utility code required by the released MSANet family.
 
 Included:
 
-- Primary training entry: `uniformerclgai2edgez3duo23.py`
-- Primary validation/testing entry: `uniformerclgai2edgez3duo23val.py`
-- Additional duo23 variants: `uniformerclgai2edgez3duo23*.py`
-- Archived/alternative duo23 variants: `qita/uniformerclgai2edgez3duo23*.py`
+- Primary training entry: `MSANet_train.py`
+- Primary validation/testing entry: `MSANet_test.py`
+- Additional MSANet variants: `MSANet_*.py`
+- Archived/alternative MSANet variants: `qita/MSANet_*.py`
 - Model code: `src/`
 - Dataset loaders and transforms: `dataset/`
 - Training and evaluation helpers: `train_utils/`, `train_utilsx/`
@@ -34,13 +34,13 @@ Install the required Python packages in an environment with PyTorch and CUDA sup
 Training:
 
 ```bash
-python uniformerclgai2edgez3duo23.py --device cuda --batch-size 16 --epochs 35
+python MSANet_train.py --device cuda --batch-size 16 --epochs 35
 ```
 
 Validation/testing with a local checkpoint:
 
 ```bash
-python uniformerclgai2edgez3duo23val.py --device cuda --resume /path/to/model-34.pth
+python MSANet_test.py --device cuda --resume /path/to/model-34.pth
 ```
 
 Before running on a new machine, update the dataset paths in the dataset loader or scripts to match your local HDobe5K, HCOCO, HFlickr, and Hday2Night locations.

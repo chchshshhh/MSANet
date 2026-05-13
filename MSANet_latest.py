@@ -1,6 +1,6 @@
-import os
+﻿import os
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+os.environ['CUDA_VISIBLE_DEVICES'] = '2'
 import time
 import datetime
 import numpy as np
@@ -20,10 +20,10 @@ import albumentations as A
 from albumentations.pytorch import ToTensorV2
 # from src.fcnconvnext import FcnNet
 # from src.model.uniformeredgez3dMTduo import FcnNet
-from src.model.xin.uniformeredgez3dMTduo23gaigru import FcnNet
+from src.model.xin.MSANet_latest import FcnNet
 import numpy as np
 # from src.swintransformer_model import fcn_transformer
-from train_utils.train_and_eval_dc22cledge4444 import train_one_epoch, evaluate, create_lr_scheduler
+from train_utils.train_and_eval_dc22cledge33333 import train_one_epoch, evaluate, create_lr_scheduler
 from dataset.my_dataset_irl384gaiedge import CasiaSegmentation,CasiaSegmentation2,CasiaSegmentation3,CasiaSegmentation4
 
 
@@ -390,7 +390,7 @@ def main(args):
         #     torch.save(save_file, "save_weights_convext_du3/best_model.pth")
         # else:
         #     torch.save(save_file, "save_weights/model_{}.pth".format(epoch))
-        torch.save(save_file, "duo23gru/model-{}.pth".format(epoch))
+        torch.save(save_file, "duo23latest/model-{}.pth".format(epoch))
     total_time = time.time() - start_time
     total_time_str = str(datetime.timedelta(seconds=int(total_time)))
     print("training time {}".format(total_time_str))
@@ -451,6 +451,8 @@ if __name__ == '__main__':
     # if not os.path.exists("./dd2222"):
     #     os.mkdir("./dd2222")
 
-    if not os.path.exists("./duo23gru"):
-        os.mkdir("./duo23gru")
+    if not os.path.exists("./duo23latest"):
+        os.mkdir("./duo23latest")
+    # if not os.path.exists("./duo23region"):
+    #     os.mkdir("./duo23region")
     main(args)

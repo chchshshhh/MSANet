@@ -1,4 +1,4 @@
-import os
+﻿import os
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 import time
@@ -20,10 +20,10 @@ import albumentations as A
 from albumentations.pytorch import ToTensorV2
 # from src.fcnconvnext import FcnNet
 # from src.model.uniformeredgez3dMTduo import FcnNet
-from src.model.xin.uniformeredgez3dMTduo23gaigru import FcnNet
+from src.model.xin.MSANet_resnet import FcnNet
 import numpy as np
 # from src.swintransformer_model import fcn_transformer
-from train_utils.train_and_eval_dc22cledge4444 import train_one_epoch, evaluate, create_lr_scheduler
+from train_utils.train_and_eval_dc22cledge33333 import train_one_epoch, evaluate, create_lr_scheduler
 from dataset.my_dataset_irl384gaiedge import CasiaSegmentation,CasiaSegmentation2,CasiaSegmentation3,CasiaSegmentation4
 
 
@@ -62,13 +62,13 @@ from dataset.my_dataset_irl384gaiedge import CasiaSegmentation,CasiaSegmentation
 class SegmentationPresetTrain:
     def __init__(self, base_size, crop_size, hflip_prob=0.5, vflip_prob=0.5,
                  mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)):
-        min_size = 256
-        max_size = 256
+        min_size = 384
+        max_size = 384
 
         self.transformspre = A.Compose([
             # reszie
             A.Resize(384, 384),
-            # # A.RandomCrop(256, 256),
+            # # A.RandomCrop(384, 384),
             A.RandomRotate90(p=0.5),
             A.Transpose(p=0.5),
             # A.OneOf([
@@ -83,7 +83,7 @@ class SegmentationPresetTrain:
             #     A.GaussNoise(var_limit=(5.0, 20.0)),
             # ], p=0.5),
             # A.Resize(288, 288),
-            # A.RandomCrop(256, 256),
+            # A.RandomCrop(384, 384),
             # A.RandomRotate90(p=0.5),
             # A.Transpose(p=0.5),
         ], )
@@ -159,7 +159,7 @@ class SegmentationPresetEval:
 
         # self.transforms2 = A.Compose([
         #     # reszie
-        #     # A.Resize(256, 256),
+        #     # A.Resize(384, 384),
         #     A.Normalize(mean=mean, std=std),
         #     ToTensorV2(),
         #
@@ -390,7 +390,7 @@ def main(args):
         #     torch.save(save_file, "save_weights_convext_du3/best_model.pth")
         # else:
         #     torch.save(save_file, "save_weights/model_{}.pth".format(epoch))
-        torch.save(save_file, "duo23gru/model-{}.pth".format(epoch))
+        torch.save(save_file, "duo23res/model-{}.pth".format(epoch))
     total_time = time.time() - start_time
     total_time_str = str(datetime.timedelta(seconds=int(total_time)))
     print("training time {}".format(total_time_str))
@@ -451,6 +451,6 @@ if __name__ == '__main__':
     # if not os.path.exists("./dd2222"):
     #     os.mkdir("./dd2222")
 
-    if not os.path.exists("./duo23gru"):
-        os.mkdir("./duo23gru")
+    if not os.path.exists("./duo23res"):
+        os.mkdir("./duo23res")
     main(args)

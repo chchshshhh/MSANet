@@ -1,4 +1,4 @@
-import os
+﻿import os
 import time
 import datetime
 import numpy as np
@@ -16,7 +16,7 @@ setup_seed(666)
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 # from src.fcnconvnext import FcnNet
-from src.model.xin.uniformeredgez3dMTduo23gaigru import FcnNet
+from src.model.xin.MSANet_gru import FcnNet
 import numpy as np
 import warnings
 warnings.filterwarnings('ignore')
