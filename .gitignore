@@ -1,0 +1,21 @@
+# Model weights and checkpoints
+*.pth
+*.pt
+*.ckpt
+*.pth.tar
+checkpoint*
+
+# Runtime outputs
+*.log
+nohup.out
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Local environments and editor files
+.venv/
+venv/
+.idea/
+.vscode/
+.DS_Store
